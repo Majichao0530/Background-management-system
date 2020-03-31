@@ -2,22 +2,90 @@
 import React, { Component } from "react";
 
 import logo from "../../assets/images/logo.png";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Menu } from "antd";
-import {
-  AppstoreOutlined,
-  PieChartOutlined,
-  DesktopOutlined,
-  ContainerOutlined,
-  MailOutlined
-} from "@ant-design/icons";
-
+import menuList from "../../config/menuConfig";
+import * as Icon from "@ant-design/icons";
 import "./index.less";
 
 const { SubMenu } = Menu;
 
-export default class LeftNav extends Component {
+class LeftNav extends Component {
+  // 根据menuList数据数组生成对应的标签数组
+  // 使用map+递归调用 666
+  getMenuNodes_map = menuList => {
+    return menuList.map(item => {
+      if (!item.children) {
+        return (
+          <Menu.Item key={item.key}>
+            <Link to={item.key}>
+              {React.createElement(Icon[item.icon])}
+              <span>{item.title}</span>
+            </Link>
+          </Menu.Item>
+        );
+      } else {
+        return (
+          <SubMenu
+            key={item.key}
+            title={
+              <span>
+                {React.createElement(Icon[item.icon])}
+                <span>{item.title}</span>
+              </span>
+            }
+          >
+            {this.getMenuNodes_map(item.children)}
+          </SubMenu>
+        );
+      }
+    });
+  };
+  // 使用reduce+递归
+  getMenuNodes = menuList => {
+    const path = this.props.location.pathname;
+    return menuList.reduce((pre, item) => {
+      // 向pre添加两种元素，判断
+      if (!item.children) {
+        pre.push(
+          <Menu.Item key={item.key}>
+            <Link to={item.key}>
+              {React.createElement(Icon[item.icon])}
+              <span>{item.title}</span>
+            </Link>
+          </Menu.Item>
+        );
+      } else {
+        // 查找一个与当前请求路径匹配的item
+        const cItem = item.children.find(cItem => cItem.key === path);
+        // 如果存在则意味着当前item需要展开
+        if (cItem) {
+          this.openKey = item.key;
+        }
+        pre.push(
+          <SubMenu
+            key={item.key}
+            title={
+              <span>
+                {React.createElement(Icon[item.icon])}
+                <span>{item.title}</span>
+              </span>
+            }
+          >
+            {this.getMenuNodes(item.children)}
+          </SubMenu>
+        );
+      }
+      return pre;
+    }, []);
+  };
+
+  componentWillMount() {
+    this.meunNodes = this.getMenuNodes(menuList);
+  }
   render() {
+    const path = this.props.location.pathname;
+    const openKey = this.openKey;
     return (
       <div className="left-nav">
         <Link to="/" className="left-nav-header">
@@ -25,69 +93,20 @@ export default class LeftNav extends Component {
           <h1>项目后台</h1>
         </Link>
         <Menu
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
+          selectedKeys={[path]}
+          defaultOpenKeys={[openKey]}
           mode="inline"
           theme="dark"
         >
-          <Menu.Item key="1">
-            <Link to="/home">
-              <PieChartOutlined />
-              <span>首页</span>
-            </Link>
-          </Menu.Item>
-          <SubMenu
-            key="sub1"
-            title={
-              <span>
-                <MailOutlined />
-                <span>商品</span>
-              </span>
-            }
-          >
-            <Menu.Item key="2">
-              <Link to="/category">
-                <DesktopOutlined />
-                <span>品类管理</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <Link to="/product">
-                <DesktopOutlined />
-                <span>商品管理</span>
-              </Link>
-            </Menu.Item>
-          </SubMenu>
-          <Menu.Item key="4">
-            <Link to="/user">
-              <DesktopOutlined />
-              <span>用户管理</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="5">
-            <Link to="/role">
-              <ContainerOutlined />
-              <span>角色管理</span>
-            </Link>
-          </Menu.Item>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <AppstoreOutlined />
-                <span>Navigation Two</span>
-              </span>
-            }
-          >
-            <Menu.Item key="9">Option 9</Menu.Item>
-            <Menu.Item key="10">Option 10</Menu.Item>
-            <SubMenu key="sub3" title="Submenu">
-              <Menu.Item key="11">Option 11</Menu.Item>
-              <Menu.Item key="12">Option 12</Menu.Item>
-            </SubMenu>
-          </SubMenu>
+          {this.meunNodes}
         </Menu>
       </div>
     );
   }
 }
+
+/* 
+  高阶组件withRouter 包装非路由组件 返回新组件
+  新的组件会向非路由组件传递：history、location、match
+*/
+export default withRouter(LeftNav);
