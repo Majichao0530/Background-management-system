@@ -1,9 +1,9 @@
 // 登录的路由组件
 
 import React, { Component } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-
+import { reqLogin } from "../../api";
 import "./login.less";
 
 import logo from "./images/logo.png";
@@ -24,8 +24,30 @@ export default class Login extends Component {
   //     }
   //   };
   render() {
-    const onFinish = values => {
-      console.log("提交登录的ajax请求", values);
+    const onFinish = async values => {
+      // console.log("提交登录的ajax请求", values);
+      // 请求登录
+      const { username, password } = values;
+      /*
+        reqLogin(username, password)
+        .then(response => {
+          console.log("登录成功", response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      */
+
+      // 用await和async优化ajax请求回来的promise对象
+      const result = await reqLogin(username, password);
+      // console.log("请求成功", response.data);
+      if (result.status === 0) {
+        message.success("登录成功");
+        // 跳转到管理界面
+        this.props.history.replace("/");
+      } else {
+        message.error(result.msg);
+      }
     };
     const onFinishFailed = errorInfo => {
       console.log("校验失败!");
