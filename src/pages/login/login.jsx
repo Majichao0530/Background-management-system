@@ -5,8 +5,11 @@ import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { reqLogin } from "../../api";
 import "./login.less";
+import memoryUtils from "../../utils/memoryUtils";
+import storageUtils from "../../utils/storageUtils";
 
-import logo from "./images/logo.png";
+import logo from "../../assets/images/logo.png";
+import { Redirect } from "react-router-dom";
 
 export default class Login extends Component {
   // 自定义验证
@@ -24,8 +27,13 @@ export default class Login extends Component {
   //     }
   //   };
   render() {
+    // 判断用户是否已经登录，自动跳转至admin界面
+    const user = memoryUtils.user;
+    if (user && user._id) {
+      return <Redirect to="/" />;
+    }
+
     const onFinish = async values => {
-      // console.log("提交登录的ajax请求", values);
       // 请求登录
       const { username, password } = values;
       /*
@@ -37,12 +45,16 @@ export default class Login extends Component {
           console.log(error);
         });
       */
-
       // 用await和async优化ajax请求回来的promise对象
       const result = await reqLogin(username, password);
       // console.log("请求成功", response.data);
       if (result.status === 0) {
         message.success("登录成功");
+        // 保存当前登录的用户
+        const user = result.data;
+        memoryUtils.user = user; // 保存在内存中
+        storageUtils.saveUser(user); // 保存到local
+
         // 跳转到管理界面
         this.props.history.replace("/");
       } else {
