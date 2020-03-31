@@ -8,7 +8,7 @@ import "./login.less";
 import memoryUtils from "../../utils/memoryUtils";
 import storageUtils from "../../utils/storageUtils";
 
-import logo from "./images/logo.png";
+import logo from "../../assets/images/logo.png";
 import { Redirect } from "react-router-dom";
 
 export default class Login extends Component {
