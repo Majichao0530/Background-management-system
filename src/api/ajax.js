@@ -2,7 +2,7 @@
    发送异步ajax请求的模块函数
    封装axios库
    函数返回值是一个promise对象
-   ajax优化1：统一处理请求异常，在外层包裹一个自行创建的Promise对象
+   ajax优化：统一处理请求异常，在外层包裹一个自行创建的Promise对象
 */
 
 import axios from "axios";

@@ -17,6 +17,18 @@ export const reqLogin = (username, password) =>
 // 添加用户
 export const reqAddUser = user => ajax("/manage/user/add", user, "POST");
 
+// 获取一级或二级分类的列表
+export const reqCategorys = parentId =>
+  ajax("/manage/category/list", { parentId });
+
+// 添加分类
+export const reqAddCategory = (parentId, categoryName) =>
+  ajax("/manage/category/add", { parentId, categoryName }, "POST");
+
+// 更新分类
+export const reqUpdateCategory = ({ categoryId, categoryName }) =>
+  ajax("/manage/category/update", { categoryId, categoryName }, "POST");
+
 // jsonp请求天气接口函数
 export const reqWeather = city => {
   return new Promise((resolve, reject) => {
@@ -25,7 +37,6 @@ export const reqWeather = city => {
       // 若jsonp请求成功
       if (!err && data.status === "success") {
         const { dayPictureUrl, weather } = data.results[0].weather_data[0];
-        console.log(dayPictureUrl, weather);
         resolve({ dayPictureUrl, weather });
       } else {
         // 若jsonp请求失败
