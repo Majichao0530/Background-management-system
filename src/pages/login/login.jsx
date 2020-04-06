@@ -33,7 +33,7 @@ export default class Login extends Component {
       return <Redirect to="/" />;
     }
 
-    const onFinish = async values => {
+    const onFinish = async (values) => {
       // 请求登录
       const { username, password } = values;
       /*
@@ -61,7 +61,7 @@ export default class Login extends Component {
         message.error(result.msg);
       }
     };
-    const onFinishFailed = errorInfo => {
+    const onFinishFailed = (errorInfo) => {
       console.log("校验失败!");
     };
     return (
@@ -75,7 +75,7 @@ export default class Login extends Component {
           <Form
             name="normal_login"
             className="login-form"
-            initialValues={{ remember: true }}
+            initialValues={{ username: "admin" }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
@@ -88,8 +88,8 @@ export default class Login extends Component {
                 { max: 12, message: "用户名最大长度为12位" },
                 {
                   pattern: /^[a-zA-Z0-9_]+$/,
-                  message: "用户名禁止出现特殊字符"
-                }
+                  message: "用户名禁止出现特殊字符",
+                },
               ]}
             >
               <Input
@@ -107,8 +107,8 @@ export default class Login extends Component {
                 { max: 12, message: "密码最大长度为12位" },
                 {
                   pattern: /^[a-zA-Z0-9_]+$/,
-                  message: "密码禁止出现特殊字符"
-                }
+                  message: "密码禁止出现特殊字符",
+                },
               ]}
             >
               <Input
