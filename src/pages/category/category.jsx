@@ -6,7 +6,6 @@ import { PlusOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import LinkButton from "../../components/link-button";
 import { reqCategorys, reqAddCategory, reqUpdateCategory } from "../../api";
 import AddFrom from "./add-form";
-import UPdateFrom from "./update-form";
 import UpdateForm from "./update-form";
 
 export default class Category extends Component {
@@ -31,7 +30,9 @@ export default class Category extends Component {
         width: 300,
         render: (category) => (
           <span>
-            <LinkButton onClick={this.showUpdate}>修改分类</LinkButton>
+            <LinkButton onClick={() => this.showUpdate(category)}>
+              修改分类
+            </LinkButton>
             {/* 解决如何向事件回调函数传递参数：
             先定义一个匿名箭头函数，在其中调用事件函数并传入参数 */}
             {this.state.parentId === "0" ? (
@@ -100,17 +101,53 @@ export default class Category extends Component {
   };
 
   // 添加品类
-  addCategory = () => {};
+  addCategory = () => {
+    this.formRef.current.validateFields().then(async (values) => {
+      // 准备数据
+      const { parentId, categoryName } = values;
+      // 发送请求
+      const result = await reqAddCategory(parentId, categoryName);
+      if (result.status === 0) {
+        this.setState({ parentId }, () => {
+          this.getCategorys();
+        });
+      }
+      // 关闭对话框
+      this.setState({
+        showStatus: 0,
+      });
+    });
+  };
 
   // 显示更新
-  showUpdate = () => {
+  showUpdate = (category) => {
+    // 保存分类对象
+    this.category = category;
+    // console.log(category.name);
     this.setState({
       showStatus: 2,
     });
   };
 
   // 更新品类名称
-  updateCategory = () => {};
+  updateCategory = () => {
+    this.formRef.current.validateFields().then(async (values) => {
+      // 准备数据
+      const categoryId = this.category._id;
+      const { categoryName } = values;
+      // 发送请求
+      const result = await reqUpdateCategory({ categoryId, categoryName });
+      if (result.status === 0) {
+        // 重新显示列表
+        this.getCategorys();
+      }
+
+      // 关闭对话框
+      this.setState({
+        showStatus: 0,
+      });
+    });
+  };
 
   // 关闭对话框回调函数
   handleCancel = () => {
@@ -129,6 +166,7 @@ export default class Category extends Component {
   }
 
   render() {
+    // 读取状态
     const {
       categorys,
       subCategorys,
@@ -137,6 +175,9 @@ export default class Category extends Component {
       loading,
       showStatus,
     } = this.state;
+    // 读取分类
+    const { name } = this.category || { name: "" };
+    // console.log(category.name);
     const title =
       parentId === "0" ? (
         "一级分类列表"
@@ -178,16 +219,29 @@ export default class Category extends Component {
           visible={showStatus === 1}
           onOk={this.addCategory}
           onCancel={this.handleCancel}
+          destroyOnClose
         >
-          <AddFrom />
+          <AddFrom
+            categorys={categorys}
+            parentId={parentId}
+            setForm={(formRef) => {
+              this.formRef = formRef;
+            }}
+          />
         </Modal>
         <Modal
           title="更新分类"
           visible={showStatus === 2}
           onOk={this.updateCategory}
           onCancel={this.handleCancel}
+          destroyOnClose
         >
-          <UpdateForm />
+          <UpdateForm
+            categoryName={name}
+            setForm={(formRef) => {
+              this.formRef = formRef;
+            }}
+          />
         </Modal>
       </Card>
     );
