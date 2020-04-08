@@ -15,10 +15,10 @@ export const reqLogin = (username, password) =>
   ajax("/login", { username, password }, "POST");
 
 // 添加用户
-export const reqAddUser = user => ajax("/manage/user/add", user, "POST");
+export const reqAddUser = (user) => ajax("/manage/user/add", user, "POST");
 
 // 获取一级或二级分类的列表
-export const reqCategorys = parentId =>
+export const reqCategorys = (parentId) =>
   ajax("/manage/category/list", { parentId });
 
 // 添加分类
@@ -29,8 +29,33 @@ export const reqAddCategory = (parentId, categoryName) =>
 export const reqUpdateCategory = ({ categoryId, categoryName }) =>
   ajax("/manage/category/update", { categoryId, categoryName }, "POST");
 
+// 获取商品分页列表
+export const reqProducts = (pageNum, pageSize) =>
+  ajax("/manage/product/list", { pageNum, pageSize });
+
+// 获取分类
+export const reqCategoryName = (categoryId) =>
+  ajax("/manage/category/info", { categoryId });
+
+// 更新商品状态（上架下架操作）
+export const reqUpdateStatus = (productId, status) =>
+  ajax("/manage/product/updateStatus", { productId, status }, "POST");
+
+// 获取搜索商品分页列表
+export const reqSearchProducts = ({
+  pageNum,
+  pageSize,
+  searchName,
+  searchType,
+}) =>
+  ajax("/manage/product/search", {
+    pageNum,
+    pageSize,
+    [searchType]: searchName,
+  });
+
 // jsonp请求天气接口函数
-export const reqWeather = city => {
+export const reqWeather = (city) => {
   return new Promise((resolve, reject) => {
     const url = `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`;
     jsonp(url, {}, (err, data) => {
