@@ -54,6 +54,14 @@ export const reqSearchProducts = ({
     [searchType]: searchName,
   });
 
+// 删除已上传的图片
+export const reqDeleteImg = (name) =>
+  ajax("/manage/img/delete", { name }, "POST");
+
+// 添加/修改商品
+export const reqAddorUpdateProduct = (product) =>
+  ajax("/manage/product/" + (product._id ? "update" : "add"), product, "POST");
+
 // jsonp请求天气接口函数
 export const reqWeather = (city) => {
   return new Promise((resolve, reject) => {

@@ -4,7 +4,7 @@ import { Card, List } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import LinkButton from "../../components/link-button";
-// import { BASE_IMG_URL } from "../../utils/constants";
+import { BASE_IMG_URL } from "../../utils/constants";
 import { reqCategoryName } from "../../api";
 
 const Item = List.Item;
@@ -74,14 +74,14 @@ export default class ProductDetail extends Component {
           <Item>
             <span className="left">商品图片:</span>
             <span>
-              {/* {imgs.map((img) => (
+              {imgs.map((img) => (
                 <img
                   key={img}
                   src={BASE_IMG_URL + img}
                   className="product-img"
                   alt="img"
                 />
-              ))} */}
+              ))}
             </span>
           </Item>
           <Item>
