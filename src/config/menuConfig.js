@@ -3,7 +3,7 @@ const menuList = [
     title: "首页", // 菜单标题名称
     key: "/home", // 对应的path
     icon: "HomeOutlined", // 图标名称
-    isPublic: true // 公开的
+    isPublic: true, // 公开的
   },
   {
     title: "商品",
@@ -14,25 +14,24 @@ const menuList = [
       {
         title: "品类管理",
         key: "/category",
-        icon: "BarsOutlined"
+        icon: "BarsOutlined",
       },
       {
         title: "商品管理",
         key: "/product",
-        icon: "ToolOutlined"
-      }
-    ]
+        icon: "ToolOutlined",
+      },
+    ],
   },
-
   {
     title: "用户管理",
     key: "/user",
-    icon: "UserOutlined"
+    icon: "UserOutlined",
   },
   {
     title: "角色管理",
     key: "/role",
-    icon: "SafetyOutlined"
+    icon: "SafetyOutlined",
   },
 
   {
@@ -43,26 +42,26 @@ const menuList = [
       {
         title: "柱形图",
         key: "/charts/bar",
-        icon: "BarChartOutlined"
+        icon: "BarChartOutlined",
       },
       {
         title: "折线图",
         key: "/charts/line",
-        icon: "LineChartOutlined"
+        icon: "LineChartOutlined",
       },
       {
         title: "饼图",
         key: "/charts/pie",
-        icon: "PieChartOutlined"
-      }
-    ]
+        icon: "PieChartOutlined",
+      },
+    ],
   },
 
   {
     title: "订单管理",
     key: "/order",
-    icon: "WindowsOutlined"
-  }
+    icon: "WindowsOutlined",
+  },
 ];
 
 export default menuList;

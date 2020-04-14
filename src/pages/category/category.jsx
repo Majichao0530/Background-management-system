@@ -5,7 +5,7 @@ import { PlusOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 import LinkButton from "../../components/link-button";
 import { reqCategorys, reqAddCategory, reqUpdateCategory } from "../../api";
-import AddFrom from "./add-form";
+import AddForm from "./add-form";
 import UpdateForm from "./update-form";
 
 export default class Category extends Component {
@@ -221,7 +221,7 @@ export default class Category extends Component {
           onCancel={this.handleCancel}
           destroyOnClose
         >
-          <AddFrom
+          <AddForm
             categorys={categorys}
             parentId={parentId}
             setForm={(formRef) => {

@@ -17,7 +17,7 @@ class Header extends Component {
   state = {
     currentTime: formatDate(Date.now()), // 当前时间的字符串
     dayPictureUrl: "", // 天气图片
-    weather: "" // 天气文本
+    weather: "", // 天气文本
   };
 
   getTime = () => {
@@ -35,11 +35,13 @@ class Header extends Component {
   getTitle = () => {
     const path = this.props.location.pathname;
     let title;
-    menuList.forEach(item => {
+    menuList.forEach((item) => {
       if (item.key === path) {
         title = item.title;
       } else if (item.children) {
-        const cItem = item.children.find(cItem => cItem.key === path);
+        const cItem = item.children.find(
+          (cItem) => path.indexOf(cItem.key) === 0
+        );
         if (cItem) {
           title = cItem.title;
         }
@@ -60,7 +62,7 @@ class Header extends Component {
         memoryUtils.user = {};
         // 跳转至login页面
         this.props.history.replace("/login");
-      }
+      },
     });
   };
 
