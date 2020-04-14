@@ -1,10 +1,12 @@
 // 商品管理的添加和更新的子路由
 import React, { Component } from "react";
-import { Card, Input, Form, Cascader, Upload, Button } from "antd";
+import { Card, Input, Form, Cascader, Button, message } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import LinkButton from "../../components/link-button";
-import { reqCategorys } from "../../api/index";
+import { reqCategorys, reqAddorUpdateProduct } from "../../api/index";
+import PicturesWall from "./pictures-wall";
+import RichTextEditor from "./rich-text-editor";
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -15,6 +17,14 @@ export default class ProductAddProduct extends Component {
   state = {
     options: [],
   };
+
+  constructor(props) {
+    super(props);
+
+    // 创建用来保存ref标识的标签对象容器
+    this.pw = React.createRef();
+    this.editor = React.createRef();
+  }
 
   // 整理分类列表数据得到所需值和名称
   initOptions = async (categorys) => {
@@ -63,9 +73,41 @@ export default class ProductAddProduct extends Component {
 
   // 发送表单验证
   submit = () => {
-    this.formRef.current.validateFields().then((values) => {
-      console.log(values);
-      alert("发送");
+    this.formRef.current.validateFields().then(async (values) => {
+      const { name, desc, price, ids } = values;
+      let pCategoryId, categoryId;
+      if (ids.length === 1) {
+        pCategoryId = "0";
+        categoryId = ids[0];
+      } else {
+        pCategoryId = ids[0];
+        categoryId = ids[1];
+      }
+      const imgs = this.pw.current.getImgs();
+      const detail = this.editor.current.getDetail();
+      const product = {
+        name,
+        desc,
+        price,
+        pCategoryId,
+        categoryId,
+        imgs,
+        detail,
+      };
+      console.log(product);
+      // 如果是更新，需要添加_id
+      if (this.updateFlag) {
+        product._id = this.product._id;
+      }
+      // 调用接口函数添加/更新商品
+      const result = await reqAddorUpdateProduct(product);
+      console.log(result);
+      if (result.status === 0) {
+        message.success(`${this.updateFlag ? "更新" : "添加"}商品成功`);
+        this.props.history.goBack();
+      } else {
+        message.error(`${this.updateFlag ? "更新" : "添加"}商品失败`);
+      }
     });
   };
 
@@ -121,7 +163,7 @@ export default class ProductAddProduct extends Component {
 
   render() {
     const { updateFlag, product } = this;
-    const { pCategoryId, categoryId } = product;
+    const { pCategoryId, categoryId, imgs, detail } = product;
     const ids = [];
     if (updateFlag) {
       if (pCategoryId === "0") {
@@ -159,6 +201,7 @@ export default class ProductAddProduct extends Component {
             desc: product.desc,
             price: product.price,
             ids: ids,
+            imgs: imgs,
           }}
         >
           <Item
@@ -199,11 +242,15 @@ export default class ProductAddProduct extends Component {
               loadData={this.loadData}
             />
           </Item>
-          <Item label="商品图片">
-            <Input placeholder="请输入商品名称" />
+          <Item label="商品图片" name="imgs">
+            <PicturesWall ref={this.pw} />
           </Item>
-          <Item label="商品详情">
-            <Input placeholder="请输入商品名称" />
+          <Item
+            label="商品详情"
+            labelCol={{ span: 1.5 }}
+            wrapperCol={{ span: 20 }}
+          >
+            <RichTextEditor ref={this.editor} detail={detail} />
           </Item>
           <Button type="primary" onClick={this.submit}>
             提交
