@@ -1,8 +1,13 @@
-// 首页路由
-import React, { Component } from "react";
+import React from 'react'
+import './order.less'
 
-export default class Order extends Component {
-  render() {
-    return <div>order</div>;
-  }
+/*
+Home路由组件
+ */
+export default function Order(props) {
+  return (
+    <div className="order">
+      订单管理模块学生实战开发中...
+    </div>
+  )
 }
