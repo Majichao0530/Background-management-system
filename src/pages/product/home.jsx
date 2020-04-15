@@ -177,6 +177,7 @@ export default class ProductHome extends Component {
           bordered
           loading={loading}
           pagination={{
+            current: this.pageNum,
             defaultPageSize: PAGE_SIZE,
             showQuickJumper: true,
             total,
