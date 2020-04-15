@@ -4,8 +4,6 @@
 
 # 前端技术栈：React 全家桶 Antd Axios ES6
 
-# 前端技术栈：React 全家桶 Antd ES6
-
 # 后端技术栈：NodeJS Express MongoDB
 
 # 项目构建工具：Webpack

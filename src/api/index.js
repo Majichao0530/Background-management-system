@@ -14,8 +14,9 @@ export function reqLogin(username, password) {
 export const reqLogin = (username, password) =>
   ajax("/login", { username, password }, "POST");
 
-// 添加用户
-export const reqAddUser = (user) => ajax("/manage/user/add", user, "POST");
+// 添加/更新用户
+export const reqAddOrUpdateUser = (user) =>
+  ajax("/manage/user/" + (user._id ? "update" : "add"), user, "POST");
 
 // 获取一级或二级分类的列表
 export const reqCategorys = (parentId) =>
@@ -61,6 +62,24 @@ export const reqDeleteImg = (name) =>
 // 添加/修改商品
 export const reqAddorUpdateProduct = (product) =>
   ajax("/manage/product/" + (product._id ? "update" : "add"), product, "POST");
+
+// 获取所有角色列表
+export const reqRoles = () => ajax("/manage/role/list");
+
+// 添加角色
+export const reqAddRole = (roleName) =>
+  ajax("/manage/role/add", { roleName }, "POST");
+
+// 更新角色
+export const reqUpdateRole = (role) =>
+  ajax("/manage/role/update", role, "POST");
+
+// 获取所有用户列表
+export const reqUsers = () => ajax("/manage/user/list");
+
+// 删除指定用户
+export const reqDeleteUser = (userId) =>
+  ajax("/manage/user/delete", { userId }, "POST");
 
 // jsonp请求天气接口函数
 export const reqWeather = (city) => {
