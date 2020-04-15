@@ -8,6 +8,7 @@ import AddForm from "./add-form";
 import AuthForm from "./auth-form";
 import "./role.less";
 import memoryUtils from "../../utils/memoryUtils";
+import storageUtils from "../../utils/storageUtils";
 import { formatDate } from "../../utils/dateUtils";
 
 export default class Role extends Component {
@@ -98,11 +99,19 @@ export default class Role extends Component {
     const result = await reqUpdateRole(role);
     if (result.status === 0) {
       this.setState({ showAuthFlag: false });
-      message.success("设置角色权限成功");
       // this.getRoles();
-      this.setState({
-        roles: [...this.state.roles],
-      });
+      // 如果当前更新自己角色的权限，强制退出
+      if (role._id === memoryUtils.user.role._id) {
+        memoryUtils.user = {};
+        storageUtils.removeUser();
+        this.props.history.replace("/login");
+        message.success("当前角色权限修改成功，请重新登录");
+      } else {
+        message.success("设置角色权限成功");
+        this.setState({
+          roles: [...this.state.roles],
+        });
+      }
     } else {
       message.error("设置角色权限失败");
     }
@@ -149,7 +158,15 @@ export default class Role extends Component {
           pagination={{
             defaultPageSize: PAGE_SIZE,
           }}
-          rowSelection={{ type: "radio", selectedRowKeys: [role._id] }}
+          rowSelection={{
+            type: "radio",
+            selectedRowKeys: [role._id],
+            // onSelect: (role) => {
+            //   this.setState({
+            //     role,
+            //   });
+            // },
+          }}
           onRow={this.onRow}
         />
         <Modal
