@@ -15,6 +15,7 @@ import Bar from "../charts/bar";
 import Line from "../charts/line";
 import Pie from "../charts/pie";
 import Order from "../order/order";
+import NotFound from "../not-found/not-found";
 
 const { Footer, Sider, Content } = Layout;
 
@@ -35,6 +36,7 @@ export default class Admin extends Component {
           <Header>Header</Header>
           <Content style={{ margin: 20, backgroundColor: "#fff" }}>
             <Switch>
+              <Redirect exact from="/" to="/home" />
               <Route path="/home" component={Home} />
               <Route path="/category" component={Category} />
               <Route path="/product" component={Product} />
@@ -44,7 +46,7 @@ export default class Admin extends Component {
               <Route path="/charts/pie" component={Pie} />
               <Route path="/charts/line" component={Line} />
               <Route path="/order" component={Order} />
-              <Redirect to="/home" />
+              <Route component={NotFound} />
             </Switch>
           </Content>
           <Footer style={{ textAlign: "center", color: "#888" }}>
